@@ -1,0 +1,59 @@
+{
+    "name": "livetennisapi/livetennisapi-laravel",
+    "description": "Laravel integration for the Live Tennis API — a facade, auto-discovered service provider and a server-rendered <x-tennis-scores /> Blade component over the official PHP client.",
+    "type": "library",
+    "license": "MIT",
+    "homepage": "https://livetennisapi.com",
+    "keywords": ["laravel", "tennis", "tennis-api", "live-scores", "livescore", "sports", "blade", "atp", "wta"],
+    "authors": [
+        { "name": "Live Tennis API" }
+    ],
+    "require": {
+        "php": ">=8.2",
+        "livetennisapi/livetennisapi": "@dev",
+        "illuminate/support": "^11.0 || ^12.0",
+        "illuminate/view": "^11.0 || ^12.0",
+        "guzzlehttp/guzzle": "^7.8"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.0 || ^10.0",
+        "phpunit/phpunit": "^10.5 || ^11.0"
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../livetennisapi-php",
+            "options": { "symlink": false }
+        }
+    ],
+    "autoload": {
+        "psr-4": { "LiveTennisApi\\Laravel\\": "src/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "LiveTennisApi\\Laravel\\Tests\\": "tests/" }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "LiveTennisApi\\Laravel\\LiveTennisServiceProvider"
+            ],
+            "aliases": {
+                "LiveTennis": "LiveTennisApi\\Laravel\\Facades\\LiveTennis"
+            }
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "platform": {
+            "php": "8.3.0"
+        },
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
