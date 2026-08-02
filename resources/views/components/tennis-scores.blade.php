@@ -1,6 +1,8 @@
 {{-- Server-rendered live tennis scores. All values escaped via {{ }}. --}}
 <div class="lta-live-scores" data-status="{{ $status }}">
-    @if ($error)
+    @if ($upgradeRequired)
+        <p class="lta-scores-upgrade">Completed-match listings need the BASIC tier ($9.99/mo) or any History plan &mdash; <a href="https://livetennisapi.com/subscribe/upgrade">upgrade at livetennisapi.com/subscribe/upgrade</a>.</p>
+    @elseif ($error)
         <p class="lta-scores-error">Live scores are unavailable right now.</p>
     @elseif (count($matches) === 0)
         <p class="lta-scores-empty">No {{ $status }} matches right now.</p>

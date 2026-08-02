@@ -53,6 +53,27 @@ final class BladeComponentTest extends TestCase
         $this->assertStringContainsString('unavailable', $html);
     }
 
+    public function testUpgradeRequiredRendersVisibleTierNotice(): void
+    {
+        // status="completed" on a FREE key: the API answers 403 upgrade_required.
+        // The component must render a visible upgrade notice naming the required
+        // plan, not the generic error fallback and not an empty state.
+        $this->bindFakeClient([
+            new Response(403, ['Content-Type' => 'application/json'], json_encode([
+                'error' => 'upgrade_required',
+                'message' => 'Completed-match listings need the BASIC tier ($9.99/mo) or any History plan.',
+            ])),
+        ], maxRetries: 0);
+
+        $html = Blade::render('<x-tennis-scores status="completed" />');
+
+        $this->assertStringContainsString('lta-scores-upgrade', $html);
+        $this->assertStringContainsString('BASIC tier', $html);
+        $this->assertStringContainsString('History plan', $html);
+        $this->assertStringContainsString('https://livetennisapi.com/subscribe/upgrade', $html);
+        $this->assertStringNotContainsString('unavailable', $html);
+    }
+
     public function testAttributesOverrideDefaults(): void
     {
         // status="upcoming" must reach the client; matches with null score

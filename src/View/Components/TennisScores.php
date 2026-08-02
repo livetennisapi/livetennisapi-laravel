@@ -7,6 +7,7 @@ namespace LiveTennisApi\Laravel\View\Components;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 use LiveTennisApi\Exception\LiveTennisApiError;
+use LiveTennisApi\Exception\UpgradeRequired;
 use LiveTennisApi\LiveTennisApi;
 use LiveTennisApi\Model\TennisMatch;
 
@@ -30,6 +31,13 @@ final class TennisScores extends Component
     /** Non-null when the fetch failed; the view renders a graceful fallback. */
     public ?string $error = null;
 
+    /**
+     * True when the API answered 403 upgrade_required — e.g. `status="completed"`
+     * on a FREE key, which needs the BASIC tier or any History plan. The view
+     * renders a visible upgrade notice instead of the generic error fallback.
+     */
+    public bool $upgradeRequired = false;
+
     public function __construct(
         private readonly LiveTennisApi $client,
         public string $status = 'live',
@@ -48,6 +56,10 @@ final class TennisScores extends Component
     {
         try {
             $this->matches = $this->client->listMatches($this->status, $this->tour, $this->limit)->data;
+        } catch (UpgradeRequired $e) {
+            $this->upgradeRequired = true;
+            $this->error = $e->getMessage();
+            $this->matches = [];
         } catch (LiveTennisApiError $e) {
             $this->error = $e->getMessage();
             $this->matches = [];

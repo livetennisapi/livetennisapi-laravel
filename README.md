@@ -60,6 +60,12 @@ Attributes: `status` (`live` | `upcoming` | `completed`), `limit`, `tour`
 (`atp` | `wta` | `challenger` | `itf` | `juniors`). Omitted values fall back to
 `config('livetennis.scores.*')`.
 
+**Tier note:** `status="live"` and `status="upcoming"` work on the free tier.
+`status="completed"` lists completed matches, which the API gates behind the
+BASIC tier ($9.99/mo) or any History plan — on a free key the component renders
+a visible upgrade notice (with a link to
+<https://livetennisapi.com/subscribe/upgrade>) instead of scores.
+
 ## Configuration (`config/livetennis.php`)
 
 | Key | Env | Default |
@@ -78,13 +84,6 @@ composer install
 vendor/bin/phpunit                       # offline, via orchestra/testbench
 LIVETENNISAPI_KEY=twjp_… vendor/bin/phpunit --filter LiveSmokeTest   # live
 ```
-
-## Local development note
-
-This repo's `composer.json` declares a `path` repository pointing at the sibling
-`../livetennisapi-php` checkout for local development. Once both packages are
-published to Packagist, remove that repository entry and pin a normal version
-constraint (e.g. `"livetennisapi/livetennisapi": "^1.0"`).
 
 ## Requires
 
