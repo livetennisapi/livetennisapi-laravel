@@ -4,13 +4,13 @@
     "type": "library",
     "license": "MIT",
     "homepage": "https://livetennisapi.com",
-    "keywords": ["laravel", "tennis", "tennis-api", "live-scores", "livescore", "sports", "blade", "atp", "wta"],
+    "keywords": ["laravel", "tennis", "tennis-api", "live-scores", "livescore", "sports", "blade", "atp", "wta", "rankings", "h2h"],
     "authors": [
         { "name": "Live Tennis API" }
     ],
     "require": {
         "php": ">=8.2",
-        "livetennisapi/livetennisapi": "^1.0",
+        "livetennisapi/livetennisapi": "^1.1",
         "illuminate/support": "^11.0 || ^12.0",
         "illuminate/view": "^11.0 || ^12.0",
         "guzzlehttp/guzzle": "^7.8"

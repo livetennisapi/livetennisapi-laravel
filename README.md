@@ -39,13 +39,13 @@ $player = LiveTennis::getPlayer(1218);
 $fixtures = LiveTennis::listFixtures(tour: 'atp');
 
 // Cross-era head-to-head: results archive + our own completed matches. BASIC.
-$h2h = LiveTennis::getH2H('federer', 'nadal');
+$h2h = LiveTennis::getHeadToHead('federer', 'nadal');
 
 // Point-in-time rankings. Listing mode (PRO); per-player as-of mode (ULTRA).
-$table = LiveTennis::listRankings(system: 'atp', limit: 100);
+$table = LiveTennis::listRankings(systems: 'atp', limit: 100);
 
 // The point-by-point tape for one match — works on a LIVE match too. BASIC.
-$tape = LiveTennis::getMatchTape(18953, sequence: 'clean');
+$tape = LiveTennis::getHistoryMatch(18953, sequence: 'clean');
 ```
 
 The facade proxies the configured `LiveTennisApi` singleton, so every client
@@ -90,18 +90,20 @@ a visible upgrade notice (with a link to
 | `listMatches` `getMatch` `getMatchScore` | ✅ | ✅ | ✅ | ✅ |
 | `searchPlayers` `getPlayer` `listFixtures` | ✅ | ✅ | ✅ | ✅ |
 | `listTournaments` `getTournament` `getUsage` | ✅ | ✅ | ✅ | ✅ |
-| `listCompletedMatches` `getMatchTape` (history) | — | ✅¹ | ✅ | ✅ |
-| `getH2H` · `listArchiveMatches` `getArchiveMatch` `listArchivePlayers` `getArchiveCareer` (1968–2022 results archive) | — | ✅¹ | ✅ | ✅ |
-| `listMatchEvents` `listMarkets` `getMarketPrices` | — | — | ✅ | ✅ |
+| `listCompletedMatches` `getHistoryMatch` (history tape) | — | ✅¹ | ✅ | ✅ |
+| `getHeadToHead` · `listArchiveMatches` `getArchiveMatch` `listArchivePlayers` `getArchiveCareer` (1968–2022 results archive) | — | ✅¹ | ✅ | ✅ |
+| `listMatchEvents` `listMarkets` `getMarketPrices` `listMatchPrices` | — | — | ✅ | ✅ |
 | `listRankings` (rank-ordered listing) | — | — | ✅ | ✅ |
 | `listHistoryPackages` `getHistoryPackage` (bulk downloads)² | — | — | ✅ | ✅ |
 | `listRankings` (per-player as-of records) | — | — | — | ✅ |
 | `getMatchStatistics` (in-play statistics) | — | — | — | ✅ |
 | `listRallyMatches` `getRallyMatch` `getMatchRally` `getChartingPlayer` `getChartingMatch` (shot-by-shot) | — | — | — | ✅ |
 | `getMatchAnalysis` · `getWsToken` (push feed) | — | — | — | ✅ |
+| `createWebhook` `listWebhooks` `deleteWebhook` (direct keys only, max 3/key) | — | — | — | ✅ |
 
 ¹ Also unlocked by any History plan, which works on top of a FREE key.
-² `kind: rally | rankings` packages and the `year` archive listing need ULTRA.
+² `kind: 'rankings'` packages and the `year` archive listing need ULTRA (the
+`year` listing is also unlocked by History Business or a 1-year package).
 
 List endpoints paginate with `limit` (≤200, default 50) and `offset`, and accept
 the new filters where documented: `player` (repeatable), `from`/`to`, `country`
