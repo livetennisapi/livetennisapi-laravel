@@ -1,9 +1,17 @@
 # Live Tennis API — Laravel
 
-Laravel integration for the [Live Tennis API](https://livetennisapi.com), wrapping the
-official [PHP client](https://github.com/livetennisapi/livetennisapi-php): an
+Laravel integration for the [Live Tennis API](https://livetennisapi.com) — live
+scores, fixtures, players, rankings, head-to-head and a 1968–2022 results
+archive for **ATP, WTA, Challenger, ITF and juniors** — wrapping the official
+[PHP client](https://github.com/livetennisapi/livetennisapi-php) with an
 auto-discovered service provider, a `LiveTennis` facade, and a server-rendered
 `<x-tennis-scores />` Blade component.
+
+[![ci](https://github.com/livetennisapi/livetennisapi-laravel/actions/workflows/ci.yml/badge.svg)](https://github.com/livetennisapi/livetennisapi-laravel/actions/workflows/ci.yml)
+[![Packagist](https://img.shields.io/packagist/v/livetennisapi/livetennisapi-laravel.svg)](https://packagist.org/packages/livetennisapi/livetennisapi-laravel)
+[![license](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
+[**Documentation**](https://docs.livetennisapi.com) · [**Get a free API key**](https://livetennisapi.com/subscribe/free)
 
 ## Install
 
@@ -29,6 +37,15 @@ use LiveTennisApi\Laravel\Facades\LiveTennis;
 $live = LiveTennis::listMatches('live');
 $player = LiveTennis::getPlayer(1218);
 $fixtures = LiveTennis::listFixtures(tour: 'atp');
+
+// Cross-era head-to-head: results archive + our own completed matches. BASIC.
+$h2h = LiveTennis::getH2H('federer', 'nadal');
+
+// Point-in-time rankings. Listing mode (PRO); per-player as-of mode (ULTRA).
+$table = LiveTennis::listRankings(system: 'atp', limit: 100);
+
+// The point-by-point tape for one match — works on a LIVE match too. BASIC.
+$tape = LiveTennis::getMatchTape(18953, sequence: 'clean');
 ```
 
 The facade proxies the configured `LiveTennisApi` singleton, so every client
@@ -66,6 +83,53 @@ BASIC tier ($9.99/mo) or any History plan — on a free key the component render
 a visible upgrade notice (with a link to
 <https://livetennisapi.com/subscribe/upgrade>) instead of scores.
 
+## Endpoints and tiers
+
+| Facade methods | FREE | BASIC | PRO | ULTRA |
+|---|:--:|:--:|:--:|:--:|
+| `listMatches` `getMatch` `getMatchScore` | ✅ | ✅ | ✅ | ✅ |
+| `searchPlayers` `getPlayer` `listFixtures` | ✅ | ✅ | ✅ | ✅ |
+| `listTournaments` `getTournament` `getUsage` | ✅ | ✅ | ✅ | ✅ |
+| `listCompletedMatches` `getMatchTape` (history) | — | ✅¹ | ✅ | ✅ |
+| `getH2H` · `listArchiveMatches` `getArchiveMatch` `listArchivePlayers` `getArchiveCareer` (1968–2022 results archive) | — | ✅¹ | ✅ | ✅ |
+| `listMatchEvents` `listMarkets` `getMarketPrices` | — | — | ✅ | ✅ |
+| `listRankings` (rank-ordered listing) | — | — | ✅ | ✅ |
+| `listHistoryPackages` `getHistoryPackage` (bulk downloads)² | — | — | ✅ | ✅ |
+| `listRankings` (per-player as-of records) | — | — | — | ✅ |
+| `getMatchStatistics` (in-play statistics) | — | — | — | ✅ |
+| `listRallyMatches` `getRallyMatch` `getMatchRally` `getChartingPlayer` `getChartingMatch` (shot-by-shot) | — | — | — | ✅ |
+| `getMatchAnalysis` · `getWsToken` (push feed) | — | — | — | ✅ |
+
+¹ Also unlocked by any History plan, which works on top of a FREE key.
+² `kind: rally | rankings` packages and the `year` archive listing need ULTRA.
+
+List endpoints paginate with `limit` (≤200, default 50) and `offset`, and accept
+the new filters where documented: `player` (repeatable), `from`/`to`, `country`
+and `tour` (`atp | wta | challenger | itf | juniors`). Unknown filter values are
+rejected with a 400, never silently ignored.
+
+## Quotas
+
+| Tier | Requests/min | Requests/day | Price |
+|---|--:|--:|--:|
+| FREE | 30 | 100 | $0 |
+| BASIC | 60 | 1,000 | $9.99/mo |
+| PRO | 300 | 10,000 | $29.99/mo |
+| ULTRA | 600 | 500,000 | $99.99/mo |
+
+At 100/day, a free key polling faster than every ~15 minutes will spend its
+allowance before the day ends — an always-on `<x-tennis-scores />` page belongs
+on BASIC. Every response carries `X-RateLimit-Limit` / `-Remaining` / `-Reset`
+headers; a 429 carries `Retry-After`, and the client retries per-minute 429s
+for you. Calling above your tier throws
+`LiveTennisApi\Exception\UpgradeRequired`, which names the tier you need.
+
+## Authentication
+
+The client sends `Authorization: Bearer twjp_…` by default (preferred). Set
+`LIVE_TENNIS_API_AUTH_HEADER=x-api-key` to send `X-API-Key` instead. Keep keys
+in `.env` — never in Blade templates or anything that reaches the browser.
+
 ## Configuration (`config/livetennis.php`)
 
 | Key | Env | Default |
@@ -87,7 +151,14 @@ LIVETENNISAPI_KEY=twjp_… vendor/bin/phpunit --filter LiveSmokeTest   # live
 
 ## Requires
 
-PHP 8.2+, Laravel 11 or 12.
+PHP 8.2+, Laravel 11 or 12, `livetennisapi/livetennisapi` ^1.1.
+
+## Links
+
+- Documentation: <https://docs.livetennisapi.com>
+- Free API key: <https://livetennisapi.com/subscribe/free>
+- Discord: <https://discord.gg/f8WUZHgDm6>
+- GitHub org: <https://github.com/livetennisapi>
 
 ## Affiliate program
 
