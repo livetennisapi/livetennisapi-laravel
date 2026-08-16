@@ -1,8 +1,13 @@
-# Live Tennis API — Laravel
+<div align="center">
 
-Laravel integration for the [Live Tennis API](https://livetennisapi.com) — live
-scores, fixtures, players, rankings, head-to-head and a 1968–2022 results
-archive for **ATP, WTA, Challenger, ITF and juniors** — wrapping the official
+<img src="https://raw.githubusercontent.com/livetennisapi/.github/main/profile/banner.jpg" alt="Live Tennis API" width="640">
+
+# livetennisapi-laravel
+
+**Laravel integration for the [Live Tennis API](https://livetennisapi.com).**
+
+Live scores, fixtures, players, rankings, head-to-head and a 1968–2022 results
+archive for ATP, WTA, Challenger, ITF and juniors — wrapping the official
 [PHP client](https://github.com/livetennisapi/livetennisapi-php) with an
 auto-discovered service provider, a `LiveTennis` facade, and a server-rendered
 `<x-tennis-scores />` Blade component.
@@ -12,6 +17,10 @@ auto-discovered service provider, a `LiveTennis` facade, and a server-rendered
 [![license](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 [**Documentation**](https://docs.livetennisapi.com) · [**Get a free API key**](https://livetennisapi.com/subscribe/free)
+
+</div>
+
+---
 
 ## Install
 
@@ -102,8 +111,11 @@ a visible upgrade notice (with a link to
 | `createWebhook` `listWebhooks` `deleteWebhook` (direct keys only, max 3/key) | — | — | — | ✅ |
 
 ¹ Also unlocked by any History plan, which works on top of a FREE key.
-² `kind: 'rankings'` packages and the `year` archive listing need ULTRA (the
-`year` listing is also unlocked by History Business or a 1-year package).
+² `kind` is `tape` (default) | `rankings` | `rally` | `archive`. `rankings`
+and `rally` (yearly charted-rally exports) packages need ULTRA; `archive`
+(yearly 1968–2022 results exports) has the same entitlement as the tape
+packages. The yearly kinds use a bare-year `YYYY` period. The `year` archive
+listing needs ULTRA (also unlocked by History Business or a 1-year package).
 
 List endpoints paginate with `limit` (≤200, default 50) and `offset`, and accept
 the new filters where documented: `player` (repeatable), `from`/`to`, `country`
