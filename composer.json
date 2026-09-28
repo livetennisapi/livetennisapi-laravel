@@ -6,7 +6,7 @@
     "homepage": "https://livetennisapi.com",
     "keywords": ["laravel", "tennis", "tennis-api", "live-scores", "livescore", "sports", "blade", "atp", "wta", "rankings", "h2h"],
     "authors": [
-        { "name": "Live Tennis API" }
+        { "name": "Synapse Research Ltd", "homepage": "https://synapsereality.io" }
     ],
     "require": {
         "php": ">=8.2",
